@@ -5,6 +5,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author Sanjaya Sandakelum
  * @since 2023-12-05
@@ -15,4 +17,7 @@ import org.springframework.stereotype.Repository;
 @Transactional
 public interface UserRepository extends JpaRepository<UserBean, Integer> {
 
+    List<UserBean> findByInstituteId(Integer instituteId);
+
+    UserBean findByEmail(String email);
 }
