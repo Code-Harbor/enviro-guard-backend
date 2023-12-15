@@ -24,6 +24,7 @@ public class InstituteBean {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(unique = true)
     private String name;
 
     public InstituteBean(Integer institute_id) {

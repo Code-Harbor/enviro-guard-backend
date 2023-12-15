@@ -20,4 +20,11 @@ public interface UserRepository extends JpaRepository<UserBean, Integer> {
     List<UserBean> findByInstituteId(Integer instituteId);
 
     UserBean findByEmail(String email);
+
+    // Find all users excluding those with a specific type
+    List<UserBean> findByTypeNot(String type);
+
+    // Find users based on instituteId and exclude those with a specific type
+    List<UserBean> findByInstituteIdAndTypeNot(Integer instituteId, String type);
+
 }

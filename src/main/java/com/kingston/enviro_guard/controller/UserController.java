@@ -1,5 +1,6 @@
 package com.kingston.enviro_guard.controller;
 
+import com.kingston.enviro_guard.dto.request.AdminRegisterRequest;
 import com.kingston.enviro_guard.dto.request.UserLoginRequest;
 import com.kingston.enviro_guard.dto.request.UserRegisterRequest;
 import com.kingston.enviro_guard.model.UserBean;
@@ -36,6 +37,7 @@ public class UserController {
     public ResponseEntity getUserById(@PathVariable Integer userId) {
         return userService.getUserById(userId);
     }
+
     @PostMapping("/delete-user-by-id/{userId}")
     public ResponseEntity deleteUserById(@PathVariable Integer userId) {
         return userService.deleteUserById(userId);
@@ -50,8 +52,14 @@ public class UserController {
     public ResponseEntity getAllUsersByInstitute(@PathVariable Integer instituteId) {
         return userService.getAllUsersByInstitute(instituteId);
     }
+
     @PostMapping("/user-login")
     public ResponseEntity userLogin(@RequestBody UserLoginRequest user) {
         return userService.userLogin(user);
+    }
+
+    @PostMapping("/register-admin")
+    public ResponseEntity registerAdminUser(@RequestBody AdminRegisterRequest user) {
+        return userService.registerAdminUser(user);
     }
 }

@@ -1,5 +1,6 @@
 package com.kingston.enviro_guard.service;
 
+import com.kingston.enviro_guard.dto.request.AdminRegisterRequest;
 import com.kingston.enviro_guard.dto.request.UserLoginRequest;
 import com.kingston.enviro_guard.dto.request.UserRegisterRequest;
 import com.kingston.enviro_guard.model.InstituteBean;
@@ -160,7 +161,16 @@ public class UserService {
 
     public ResponseEntity getAllUsersByInstitute(Integer instituteId) {
         try {
-            List<UserBean> userList = userRepository.findByInstituteId(instituteId);
+            List<UserBean> userList;
+
+            if (instituteId == 0) {
+                // If instituteId is 0, get all users excluding those with type=admin
+                userList = userRepository.findByTypeNot("admin");
+            } else {
+                // Otherwise, get users based on the provided instituteId
+                userList = userRepository.findByInstituteIdAndTypeNot(instituteId, "admin");
+            }
+
             return new ResponseEntity<>(userList, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -196,5 +206,41 @@ public class UserService {
             return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    public ResponseEntity registerAdminUser(AdminRegisterRequest user) {
+        if (user.getName() == null || user.getName().trim().isEmpty()) {
+            return new ResponseEntity<>("Name cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            return new ResponseEntity<>("Email cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            return new ResponseEntity<>("Password cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+        if (user.getType() == null || user.getType().trim().isEmpty()) {
+            return new ResponseEntity<>("User type cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+        if (user.getRole() == null || user.getRole().trim().isEmpty()) {
+            return new ResponseEntity<>("User role cannot be empty", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            UserBean userBean = new UserBean();
+            userBean.setName(user.getName());
+            userBean.setEmail(user.getEmail());
+            userBean.setPassword(user.getPassword());
+            userBean.setType(user.getType());
+            userBean.setRole(user.getRole());
+            userBean.setInstitute(null);
+
+            UserBean savedUser = userRepository.save(userBean);
+            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<>("Email already exists", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
