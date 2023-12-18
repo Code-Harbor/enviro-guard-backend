@@ -2,6 +2,7 @@ package com.kingston.enviro_guard.controller;
 
 import com.kingston.enviro_guard.dto.request.ComplainerLoginRequest;
 import com.kingston.enviro_guard.dto.request.ComplainerRegisterRequest;
+import com.kingston.enviro_guard.model.ComplainerBean;
 import com.kingston.enviro_guard.service.ComplainerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ public class ComplainerController {
     }
 
     @PostMapping("/update-complainer")
-    public ResponseEntity updateComplainer(@RequestBody ComplainerRegisterRequest complainer) {
+    public ResponseEntity updateComplainer(@RequestBody ComplainerBean complainer) {
         return complainerService.updateComplainer(complainer);
     }
 

@@ -27,20 +27,14 @@ public class ComplainerService {
         if (complainer.getPassword() == null || complainer.getPassword().trim().isEmpty()) {
             return new ResponseEntity<>("Complainer password cannot be empty.", HttpStatus.BAD_REQUEST);
         }
-        if (complainer.getPhoneNumber() == null || complainer.getPhoneNumber().trim().isEmpty()) {
-            return new ResponseEntity<>("Complainer phone number cannot be empty.", HttpStatus.BAD_REQUEST);
-        }
-        if (complainer.getAddress() == null || complainer.getAddress().trim().isEmpty()) {
-            return new ResponseEntity<>("Complainer address cannot be empty.", HttpStatus.BAD_REQUEST);
-        }
 
         try {
             ComplainerBean complainerBean = new ComplainerBean();
             complainerBean.setName(complainer.getName());
             complainerBean.setEmail(complainer.getEmail());
             complainerBean.setPassword(complainer.getPassword());
-            complainerBean.setPhoneNumber(complainer.getPhoneNumber());
-            complainerBean.setAddress(complainer.getAddress());
+            complainerBean.setPhoneNumber(null);
+            complainerBean.setAddress(null);
 
             ComplainerBean saveComplainer = complainerRepository.save(complainerBean);
             return new ResponseEntity<>(saveComplainer, HttpStatus.CREATED);
@@ -88,15 +82,16 @@ public class ComplainerService {
         }
     }
 
-    public ResponseEntity updateComplainer(ComplainerRegisterRequest complainer) {
+    public ResponseEntity updateComplainer(ComplainerBean complainer) {
         if (complainer.getId() == null) {
             return new ResponseEntity<>("Complainer id cannot be null.", HttpStatus.BAD_REQUEST);
         }
 
-        //check if the complainer with the given ID exists.
+        // check if the complainer with the given ID exists.
         ComplainerBean existingComplainer = complainerRepository.findById(complainer.getId()).orElse(null);
+
         if (existingComplainer == null) {
-            return new ResponseEntity<>("Complainer not found with the id: " + complainer.getId(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Complainer not found", HttpStatus.NOT_FOUND);
         }
 
         if (complainer.getName() == null || complainer.getName().trim().isEmpty()) {
@@ -107,28 +102,22 @@ public class ComplainerService {
             return new ResponseEntity<>("Complainer email cannot be empty.", HttpStatus.BAD_REQUEST);
         }
 
-        if (complainer.getPassword() == null || complainer.getPassword().trim().isEmpty()) {
-            return new ResponseEntity<>("Complainer password cannot be empty.", HttpStatus.BAD_REQUEST);
-        }
-
-        if (complainer.getPhoneNumber() == null || complainer.getPhoneNumber().trim().isEmpty()) {
-            return new ResponseEntity<>("Complainer phone number cannot be empty.", HttpStatus.BAD_REQUEST);
-        }
-
-        if (complainer.getAddress() == null || complainer.getAddress().trim().isEmpty()) {
-            return new ResponseEntity<>("Complainer address cannot be empty.", HttpStatus.BAD_REQUEST);
-        }
 
         try {
-            ComplainerBean complainerBean = new ComplainerBean();
-            complainerBean.setName(complainer.getName());
-            complainerBean.setEmail(complainer.getEmail());
-            complainerBean.setPassword(complainer.getPassword());
-            complainerBean.setPhoneNumber(complainer.getPhoneNumber());
-            complainerBean.setAddress(complainer.getAddress());
 
-            ComplainerBean updatedComplainer = complainerRepository.save(complainerBean);
+            existingComplainer.setName(complainer.getName());
+            existingComplainer.setEmail(complainer.getEmail());
+            existingComplainer.setPhoneNumber(complainer.getPhoneNumber());
+            existingComplainer.setAddress(complainer.getAddress());
+
+            // update password if provided
+            if (complainer.getPassword() != null) {
+                existingComplainer.setPassword(complainer.getPassword());
+            }
+
+            ComplainerBean updatedComplainer = complainerRepository.save(existingComplainer);
             return new ResponseEntity<>(updatedComplainer, HttpStatus.OK);
+
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>("Complainer email already exists.", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

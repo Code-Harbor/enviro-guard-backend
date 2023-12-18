@@ -13,11 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComplainerBean {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true)
     private Integer id;
     private String name;
+    @Column(unique = true)
     private String email;
     private String password;
     private String phoneNumber;

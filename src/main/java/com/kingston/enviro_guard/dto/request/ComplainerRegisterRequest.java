@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ComplainerRegisterRequest {
-    private Integer id;
     private String name;
     private String email;
     private String password;
-    private String phoneNumber;
-    private String address;
 }
