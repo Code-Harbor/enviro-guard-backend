@@ -15,6 +15,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class ComplainerService {
+
     private final ComplainerRepository complainerRepository;
 
     public ResponseEntity registerComplainer(ComplainerRegisterRequest complainer) {
