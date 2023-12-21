@@ -78,7 +78,7 @@ public class ComplaintService {
 
     private String saveComplaintImage(MultipartFile imageFile) throws IOException {
         // define the directory where you want to store the images
-        String uploadDirectory = "D:\\Sanjaya Personal\\Kingston Uni\\Software Development Practices\\Course Works\\Project\\Backend\\images\\complaints\\";
+        String uploadDirectory = "C:\\xampp\\htdocs\\images\\enviro-guard\\complaints\\";
 
         // ensure the directory exists, create it if necessary
         File uploadDir = new File(uploadDirectory);
@@ -96,7 +96,7 @@ public class ComplaintService {
         Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         // return the URL or path of the saved image
-        return "D:\\Sanjaya Personal\\Kingston Uni\\Software Development Practices\\Course Works\\Project\\Backend\\images\\complaints\\" + fileName;
+        return "http://localhost/images/enviro-guard/complaints/" + fileName;
     }
 
     public ResponseEntity getAllComplaintsByComplainerId(Integer complainerId) {
