@@ -28,8 +28,14 @@ public class ComplaintController {
                                        @RequestParam("complainTitle") String complainTitle,
                                        @RequestParam("complainDescription") String complainDescription,
                                        @RequestParam("location") String location,
-                                       @RequestParam("imageFile") MultipartFile imageFile) {
+                                       @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+
+        // check if imageFile is null or empty
+        if (imageFile == null || imageFile.isEmpty()) {
+            return complaintService.addComplaint(complainerId, instituteId, complainTitle, complainDescription, location, null);
+        }
         return complaintService.addComplaint(complainerId, instituteId, complainTitle, complainDescription, location, imageFile);
+
     }
 
     @GetMapping("/get-all-complains-by-complainer/{complainerId}")

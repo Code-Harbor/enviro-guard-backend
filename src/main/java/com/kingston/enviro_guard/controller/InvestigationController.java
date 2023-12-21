@@ -25,7 +25,14 @@ public class InvestigationController {
     @PostMapping("/add-investigation-report")
     public ResponseEntity addComplaint(@RequestParam("complaintId") Integer complaintId,
                                        @RequestParam("description") String description,
-                                       @RequestParam("imageFile") MultipartFile imageFile) {
+                                       @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+
+        // check if imageFile is null or empty
+        if (imageFile == null || imageFile.isEmpty()) {
+            return investigationService.addInvestigationReport(complaintId, description, null);
+        }
+
         return investigationService.addInvestigationReport(complaintId, description, imageFile);
+
     }
 }

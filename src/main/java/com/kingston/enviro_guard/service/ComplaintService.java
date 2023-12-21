@@ -172,18 +172,18 @@ public class ComplaintService {
         if (optionalComplaint.isPresent()) {
             ComplaintBean complaint = optionalComplaint.get();
 
-            // Access the associated InvestigationBean using the naming convention
+            // access the associated InvestigationBean
             Optional<InvestigationBean> optionalInvestigation = investigationRepository.findByComplaintId(complaint.getId());
 
             if (optionalInvestigation.isPresent()) {
                 InvestigationBean investigation = optionalInvestigation.get();
 
-                // Create a DTO to hold both ComplaintBean and InvestigationBean
+                // create a DTO to hold both ComplaintBean and InvestigationBean
                 ComplaintWithInvestigationResponce resultDTO = new ComplaintWithInvestigationResponce(complaint, investigation);
 
                 return Optional.of(resultDTO);
             } else {
-                // If no investigation is found, create a DTO with only the ComplaintBean
+                // if no investigation is found, create a DTO with only the ComplaintBean
                 ComplaintWithInvestigationResponce resultDTO = new ComplaintWithInvestigationResponce(complaint, null);
 
                 return Optional.of(resultDTO);

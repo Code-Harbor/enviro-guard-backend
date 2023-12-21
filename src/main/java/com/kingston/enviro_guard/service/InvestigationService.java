@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -31,6 +33,12 @@ public class InvestigationService {
 
     public final InvestigationRepository investigationRepository;
     public final ComplaintRepository complaintRepository;
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<String> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException exception) {
+        String errorMessage = "Maximum upload size exceeded. Please upload a smaller file.";
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
 
     public ResponseEntity addInvestigationReport(Integer complaintId, String description, MultipartFile imageFile) {
         try {
@@ -59,6 +67,8 @@ public class InvestigationService {
 
             return new ResponseEntity<>(savedReport, HttpStatus.CREATED);
 
+        } catch (MaxUploadSizeExceededException e) {
+            return handleMaxUploadSizeExceeded(e);
         } catch (IOException e) {
             return new ResponseEntity<>("Error processing the image.", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
